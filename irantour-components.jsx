@@ -279,6 +279,7 @@ const GuideCard = ({ guide, lang, onClick }) => {
 
 // ─── Guide Profile ────────────────────────────────────────────
 const GuideProfile = ({ guide, lang, onBack }) => {
+  const [contactOpen, setContactOpen] = React.useState(false);
   const name = lang === 'fa' ? guide.nameFa : guide.nameEn;
   const city = lang === 'fa' ? guide.city : guide.cityEn;
   const specialty = lang === 'fa' ? guide.specialtyFa : guide.specialtyEn;
@@ -289,6 +290,7 @@ const GuideProfile = ({ guide, lang, onBack }) => {
 
   return (
     <div style={{ background: '#F8F6F2', minHeight: '100vh', paddingTop: 68 }}>
+      {contactOpen && <ContactModal lang={lang} onClose={() => setContactOpen(false)} title={`${lang === 'fa' ? 'تماس با' : 'Contact'} ${name}`} />}
       {/* Hero */}
       <div style={{ background: `linear-gradient(135deg,${from} 0%,#0A0A0A 100%)`, padding: '56px 24px 64px', position: 'relative', overflow: 'hidden' }}>
         <StarWatermark size={500} style={{ top: '50%', left: '50%', transform: 'translate(-50%,-50%)', color: '#fff' }} />
@@ -310,7 +312,12 @@ const GuideProfile = ({ guide, lang, onBack }) => {
             </div>
             <div style={{ color: '#fff' }}>
               <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: 36, fontWeight: 800, margin: '0 0 8px', letterSpacing: '-0.02em' }}>{name}</h1>
-              <div style={{ color: '#C9A96E', fontWeight: 700, fontSize: 15, marginBottom: 10, fontFamily: lang === 'fa' ? 'var(--font-fa)' : 'var(--font-en)' }}>{city} — {specialty}</div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6, flexWrap: 'wrap' }}>
+                <span style={{ background: 'rgba(201,169,110,0.18)', color: '#C9A96E', border: '1px solid rgba(201,169,110,0.35)', borderRadius: 999, padding: '3px 12px', fontSize: 12, fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: 5, fontFamily: lang === 'fa' ? 'var(--font-fa)' : 'var(--font-en)' }}>
+                  📍 {city} {lang === 'fa' ? 'متخصص' : 'Specialist'}
+                </span>
+              </div>
+              <div style={{ color: 'rgba(248,246,242,0.65)', fontSize: 13, marginBottom: 10, fontFamily: lang === 'fa' ? 'var(--font-fa)' : 'var(--font-en)' }}>{specialty}</div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                 <Stars rating={guide.rating} size={15} />
                 <span style={{ fontWeight: 800, fontSize: 15, fontFamily: 'var(--font-en)' }}>{guide.rating}/5</span>
@@ -394,10 +401,10 @@ const GuideProfile = ({ guide, lang, onBack }) => {
                     </div>
                   </a>
                 )}
-                <button style={{ width: '100%', background: '#1A1A1A', color: '#F8F6F2', border: 'none', borderRadius: 999, padding: '13px', marginTop: 18, fontSize: 14, fontWeight: 700, cursor: 'pointer', fontFamily: 'var(--font-en)', transition: 'background 0.2s' }}
+                <button onClick={() => setContactOpen(true)} style={{ width: '100%', background: '#1A1A1A', color: '#F8F6F2', border: 'none', borderRadius: 999, padding: '13px', marginTop: 18, fontSize: 14, fontWeight: 700, cursor: 'pointer', fontFamily: 'var(--font-en)', transition: 'background 0.2s' }}
                 onMouseEnter={(e) => e.currentTarget.style.background = '#C9A96E'}
                 onMouseLeave={(e) => e.currentTarget.style.background = '#1A1A1A'}>
-                  {lang === 'fa' ? 'رزرو این راهنما' : 'Book This Guide'}
+                  {lang === 'fa' ? 'تماس با این راهنما' : 'Contact This Guide'}
                 </button>
               </div>
             </div>
@@ -452,7 +459,7 @@ const ProvinceCard = ({ prov, lang, onClick }) => {
           {lang === 'fa' ? prov.nameFa : prov.nameEn}
         </div>
         <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap' }}>
-          {prov.highlights.slice(0, 2).map((h) =>
+          {(lang === 'fa' ? prov.highlights : (prov.highlightsEn || prov.highlights)).slice(0, 2).map((h) =>
           <span key={h} style={{ background: 'rgba(255,255,255,0.12)', backdropFilter: 'blur(4px)', color: 'rgba(255,255,255,0.85)', fontSize: 10, padding: '1px 7px', borderRadius: 4, border: '1px solid rgba(255,255,255,0.15)', fontFamily: lang === 'fa' ? 'var(--font-fa)' : 'var(--font-en)' }}>{h}</span>
           )}
         </div>
@@ -506,15 +513,15 @@ const ChatBubble = ({ msg, isUser, isTyping }) => {
 };
 
 // ─── Section Header ───────────────────────────────────────────
-const SectionHeader = ({ overline, title, subtitle, centered = true, light = false }) =>
-<div style={{ textAlign: centered ? 'center' : 'start', marginBottom: 48 }}>
+const SectionHeader = ({ overline, title, subtitle, centered = true, light = false, lang = 'en' }) =>
+<div style={{ textAlign: centered ? 'center' : 'start', marginBottom: 48, direction: lang === 'fa' ? 'rtl' : 'ltr' }}>
     {overline &&
   <div style={{
     color: '#C9A96E', fontSize: 11, fontWeight: 700,
-    letterSpacing: '0.18em', textTransform: 'uppercase',
+    letterSpacing: lang === 'fa' ? 0 : '0.18em', textTransform: 'uppercase',
     marginBottom: 12,
     display: 'flex', alignItems: 'center', gap: 10,
-    justifyContent: centered ? 'center' : 'flex-start', fontFamily: "Khamenei"
+    justifyContent: centered ? 'center' : 'flex-start', fontFamily: "Khamenei, sans-serif"
   }}>
         <GeoLine width={24} color="#C9A96E" />
         {overline}
@@ -522,24 +529,154 @@ const SectionHeader = ({ overline, title, subtitle, centered = true, light = fal
       </div>
   }
     <h2 style={{
-
     fontSize: 'clamp(28px,3.5vw,44px)', fontWeight: 800,
     color: light ? '#F8F6F2' : '#1A1A1A',
-    margin: '0 0 14px', letterSpacing: '-0.025em', lineHeight: 1.1, fontFamily: "Khamenei"
+    margin: '0 0 14px',
+    letterSpacing: lang === 'fa' ? 0 : '-0.025em',
+    lineHeight: lang === 'fa' ? 1.6 : 1.1,
+    fontFamily: "Khamenei, sans-serif"
   }}>{title}</h2>
     {subtitle &&
   <p style={{
     color: light ? 'rgba(248,246,242,0.6)' : '#6B6B6B',
-    fontSize: 16, lineHeight: 1.7, maxWidth: 520,
-    margin: centered ? '0 auto' : '0', fontFamily: "Khamenei"
-
+    fontSize: 16, lineHeight: lang === 'fa' ? 2.0 : 1.7, maxWidth: 520,
+    margin: centered ? '0 auto' : '0', fontFamily: "Khamenei, sans-serif"
   }}>{subtitle}</p>
   }
   </div>;
 
 
+// ─── Carpet Border ───────────────────────────────────────────
+// Decorative geometric border strip for dark panels
+const CarpetBorder = ({ color = '#8B1A1A', accent = '#D4880A', height = 8 }) =>
+<div style={{ height, width: '100%', position: 'relative', overflow: 'hidden', display: 'flex', alignItems: 'center' }}>
+  <div style={{ position: 'absolute', inset: 0, background: `linear-gradient(90deg, ${color} 0%, ${accent} 25%, ${color} 50%, ${accent} 75%, ${color} 100%)` }} />
+  {/* Geometric diamond row */}
+  <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'space-around' }}>
+    {[...Array(16)].map((_, i) =>
+      <div key={i} style={{
+        width: height * 0.6, height: height * 0.6,
+        background: i % 2 === 0 ? `rgba(255,255,255,0.25)` : `rgba(0,0,0,0.15)`,
+        transform: 'rotate(45deg)',
+        flexShrink: 0
+      }} />
+    )}
+  </div>
+  {/* Center accent line */}
+  <div style={{ position: 'absolute', left: 0, right: 0, top: '50%', height: 1, background: `rgba(255,255,255,0.2)`, transform: 'translateY(-50%)' }} />
+</div>;
+
+
+// ─── Carpet Medallion ─────────────────────────────────────────
+// Circular avatar with Persian star motif — used as AI assistant icon
+const CarpetMedallion = ({ size = 44, color = '#8B1A1A', accent = '#D4880A' }) => {
+  const r = size / 2;
+  const inner = r * 0.55;
+  const starR = r * 0.38;
+  // Build 8-point star polygon
+  const starPoints = [...Array(16)].map((_, i) => {
+    const angle = (i * Math.PI) / 8 - Math.PI / 2;
+    const dist = i % 2 === 0 ? starR : starR * 0.5;
+    return `${r + dist * Math.cos(angle)},${r + dist * Math.sin(angle)}`;
+  }).join(' ');
+
+  return (
+    <div style={{ width: size, height: size, borderRadius: '50%', flexShrink: 0, overflow: 'hidden', position: 'relative' }}>
+      <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} xmlns="http://www.w3.org/2000/svg">
+        {/* Outer ring gradient */}
+        <defs>
+          <radialGradient id="mgrad" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor={accent} stopOpacity="0.9" />
+            <stop offset="60%" stopColor={color} stopOpacity="1" />
+            <stop offset="100%" stopColor="#0A0A0A" stopOpacity="1" />
+          </radialGradient>
+        </defs>
+        <circle cx={r} cy={r} r={r} fill={`url(#mgrad)`} />
+        {/* Outer decorative ring */}
+        <circle cx={r} cy={r} r={r - 2} fill="none" stroke={accent} strokeWidth="1" strokeOpacity="0.4" />
+        {/* Inner circle */}
+        <circle cx={r} cy={r} r={inner} fill={color} fillOpacity="0.6" />
+        {/* 8-point star */}
+        <polygon points={starPoints} fill={accent} fillOpacity="0.9" />
+        {/* Center dot */}
+        <circle cx={r} cy={r} r={r * 0.1} fill="#fff" fillOpacity="0.9" />
+        {/* Subtle cross lines */}
+        <line x1={r} y1={r - starR * 0.3} x2={r} y2={r + starR * 0.3} stroke="rgba(255,255,255,0.3)" strokeWidth="0.5" />
+        <line x1={r - starR * 0.3} y1={r} x2={r + starR * 0.3} y2={r} stroke="rgba(255,255,255,0.3)" strokeWidth="0.5" />
+      </svg>
+    </div>
+  );
+};
+
+
+// ─── Contact Modal ────────────────────────────────────────────
+const ContactModal = ({ lang, onClose, title }) => {
+  const t = (fa, en) => lang === 'fa' ? fa : en;
+  const [sent, setSent] = React.useState(false);
+  const [form, setForm] = React.useState({ name: '', email: '', message: '' });
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!form.name || !form.email || !form.message) return;
+    setSent(true);
+  };
+
+  return (
+    <div style={{ position: 'fixed', inset: 0, background: 'rgba(10,10,10,0.7)', zIndex: 999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24, backdropFilter: 'blur(6px)' }}
+    onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}>
+      <div style={{ background: '#fff', borderRadius: 20, padding: 36, maxWidth: 480, width: '100%', position: 'relative', boxShadow: '0 32px 80px rgba(0,0,0,0.25)' }}>
+        <div style={{ height: 4, background: 'linear-gradient(90deg,#8B1A1A,#C9A96E)', borderRadius: '4px 4px 0 0', position: 'absolute', top: 0, left: 0, right: 0 }} />
+        <button onClick={onClose} style={{ position: 'absolute', top: 16, right: 16, background: 'none', border: 'none', cursor: 'pointer', color: '#9CA3AF', fontSize: 20, lineHeight: 1 }}>✕</button>
+        {sent ? (
+          <div style={{ textAlign: 'center', padding: '20px 0' }}>
+            <div style={{ fontSize: 48, marginBottom: 16 }}>✅</div>
+            <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: 22, fontWeight: 800, color: '#1A1A1A', marginBottom: 10 }}>
+              {t('پیام ارسال شد!', 'Message Sent!')}
+            </h3>
+            <p style={{ color: '#6B6B6B', fontSize: 14, lineHeight: 1.7, fontFamily: 'var(--font-body)' }}>
+              {t('به زودی با شما تماس خواهیم گرفت.', "We'll get back to you soon.")}
+            </p>
+            <button onClick={onClose} style={{ marginTop: 20, background: '#1A1A1A', color: '#F8F6F2', border: 'none', borderRadius: 999, padding: '12px 28px', fontSize: 13, fontWeight: 700, cursor: 'pointer', fontFamily: 'var(--font-en)' }}>
+              {t('بستن', 'Close')}
+            </button>
+          </div>
+        ) : (
+          <>
+            <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: 20, fontWeight: 800, color: '#1A1A1A', marginBottom: 6 }}>{title || t('تماس با ما', 'Contact Us')}</h3>
+            <p style={{ color: '#6B6B6B', fontSize: 13, marginBottom: 24, fontFamily: 'var(--font-body)', lineHeight: 1.6 }}>
+              {t('پیام خود را بنویسید. در اسرع وقت پاسخ خواهیم داد.', "Write your message and we'll respond as soon as possible.")}
+            </p>
+            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+              {[
+                { key: 'name',  placeholder: t('نام شما', 'Your Name'),    type: 'text' },
+                { key: 'email', placeholder: t('ایمیل شما', 'Your Email'), type: 'email' },
+              ].map(({ key, placeholder, type }) => (
+                <input key={key} type={type} placeholder={placeholder} value={form[key]}
+                onChange={(e) => setForm(f => ({ ...f, [key]: e.target.value }))}
+                style={{ border: '1.5px solid #EFEFEF', borderRadius: 10, padding: '11px 16px', fontSize: 14, outline: 'none', fontFamily: 'var(--font-body)', transition: 'border-color 0.2s', color: '#1A1A1A', background: '#FAFAFA' }}
+                onFocus={(e) => e.target.style.borderColor = '#C9A96E'}
+                onBlur={(e) => e.target.style.borderColor = '#EFEFEF'} />
+              ))}
+              <textarea placeholder={t('پیام شما...', 'Your message...')} value={form.message} rows={4}
+              onChange={(e) => setForm(f => ({ ...f, message: e.target.value }))}
+              style={{ border: '1.5px solid #EFEFEF', borderRadius: 10, padding: '11px 16px', fontSize: 14, outline: 'none', fontFamily: 'var(--font-body)', resize: 'vertical', transition: 'border-color 0.2s', color: '#1A1A1A', background: '#FAFAFA' }}
+              onFocus={(e) => e.target.style.borderColor = '#C9A96E'}
+              onBlur={(e) => e.target.style.borderColor = '#EFEFEF'} />
+              <button type="submit" style={{ background: '#1A1A1A', color: '#F8F6F2', border: 'none', borderRadius: 999, padding: '13px', fontSize: 14, fontWeight: 700, cursor: 'pointer', fontFamily: 'var(--font-en)', transition: 'background 0.2s' }}
+              onMouseEnter={(e) => e.currentTarget.style.background = '#C9A96E'}
+              onMouseLeave={(e) => e.currentTarget.style.background = '#1A1A1A'}>
+                {t('ارسال پیام', 'Send Message')}
+              </button>
+            </form>
+          </>
+        )}
+      </div>
+    </div>
+  );
+};
+
 Object.assign(window, {
   StarWatermark, GeoLine, Stars, DurationBadge, DiffBadge,
   PackageCard, GuideCard, GuideProfile, ReviewCard, ProvinceCard,
-  ChatBubble, SectionHeader
+  ChatBubble, SectionHeader, CarpetBorder, CarpetMedallion, ContactModal
 });

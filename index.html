@@ -34,6 +34,13 @@
     @font-face {
       font-family: 'Khamenei';
       src: url('fonts/KHAMENEI-BLACK.TTF') format('truetype');
+      font-weight: 800;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'Khamenei';
+      src: url('fonts/KHAMENEI-BLACK.TTF') format('truetype');
       font-weight: 900;
       font-style: normal;
       font-display: swap;
@@ -90,6 +97,13 @@
       line-height: 2.0;
       letter-spacing: 0;
     }
+    html[lang="fa"] h1,
+    html[lang="fa"] h2,
+    html[lang="fa"] h3 {
+      font-family: var(--font-fa) !important;
+      letter-spacing: 0 !important;
+      line-height: 1.6 !important;
+    }
     html[lang="fa"] p,
     html[lang="fa"] span,
     html[lang="fa"] div,
@@ -97,6 +111,9 @@
     html[lang="fa"] input,
     html[lang="fa"] li {
       letter-spacing: 0 !important;
+    }
+    html[lang="fa"] p {
+      line-height: 2.0 !important;
     }
 
     /* English font switch */
@@ -122,6 +139,15 @@
     }
     @keyframes pageIn {
       from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── Hero text entrance ─────────────────────────────────── */
+    .hero-entrance {
+      animation: heroIn 0.9s cubic-bezier(0.22,1,0.36,1) both;
+    }
+    @keyframes heroIn {
+      from { opacity: 0; transform: translateY(32px); }
       to   { opacity: 1; transform: translateY(0); }
     }
 
@@ -5733,21 +5759,6 @@ var HomePage = function HomePage(_ref2) {
       columnNumber: 9
     },
     "data-om-id": "jsx:/https:/019dea42-5e9e-7d36-ba84-6dbaf4a64f1e.claudeusercontent.com/v1/design/projects/019dea42-5e9e-7d36-ba84-6dbaf4a64f1e/serve/irantour-home.jsx:6847:139:9"
-  }), /*#__PURE__*/React.createElement(StarWatermark, {
-    size: 700,
-    style: {
-      top: '50%',
-      left: '50%',
-      transform: 'translate(-50%,-50%)',
-      color: '#C9A96E',
-      opacity: 1
-    },
-    __source: {
-      fileName: _jsxFileName,
-      lineNumber: 141,
-      columnNumber: 9
-    },
-    "data-om-id": "jsx:/https:/019dea42-5e9e-7d36-ba84-6dbaf4a64f1e.claudeusercontent.com/v1/design/projects/019dea42-5e9e-7d36-ba84-6dbaf4a64f1e/serve/irantour-home.jsx:7111:141:9"
   }), /*#__PURE__*/React.createElement("div", {
     style: {
       position: 'relative',
@@ -5756,6 +5767,7 @@ var HomePage = function HomePage(_ref2) {
       maxWidth: 860,
       padding: '0 32px'
     },
+    className: "hero-entrance",
     __source: {
       fileName: _jsxFileName,
       lineNumber: 143,
@@ -10639,6 +10651,9 @@ const App = () => {
   const [scrolled,setScrolled]= React.useState(false);
   const [tweakOpen,setTweakOpen] = React.useState(false);
   const [tweaks,  setTweaks]  = React.useState(TWEAK_DEFAULTS);
+  const [selectedProvince, setSelectedProvince] = React.useState(null);
+  const [selectedGuide,    setSelectedGuide]    = React.useState(null);
+  const [selectedPackage,  setSelectedPackage]  = React.useState(null);
 
   // Navbar scroll
   React.useEffect(() => {
@@ -10654,8 +10669,13 @@ const App = () => {
     document.documentElement.lang = isFA ? 'fa'  : 'en';
   }, [lang]);
 
-  // Scroll to top on page change
-  React.useEffect(() => { window.scrollTo({ top: 0 }); }, [page]);
+  // Scroll to top on page change; clear deep-link state when leaving respective pages
+  React.useEffect(() => {
+    window.scrollTo({ top: 0 });
+    if (page !== 'destinations') setSelectedProvince(null);
+    if (page !== 'guides')       setSelectedGuide(null);
+    if (page !== 'packages')     setSelectedPackage(null);
+  }, [page]);
 
   // Tweaks panel host protocol
   React.useEffect(() => {
@@ -10683,12 +10703,13 @@ const App = () => {
 
   const renderPage = () => {
     switch (page) {
-      case 'home':         return <HomePage setPage={setPage} lang={lang} tweaks={tweaks}/>;
+      case 'home':         return <HomePage setPage={setPage} lang={lang} tweaks={tweaks} setSelectedProvince={setSelectedProvince} setSelectedGuide={setSelectedGuide} setSelectedPackage={setSelectedPackage}/>;
       case 'ai':           return <AIPlanner lang={lang}/>;
-      case 'packages':     return <PackagesPage lang={lang} setPage={setPage}/>;
-      case 'guides':       return <GuidesPage lang={lang}/>;
-      case 'destinations': return <DestinationsPage lang={lang} setPage={setPage}/>;
-      default:             return <HomePage setPage={setPage} lang={lang} tweaks={tweaks}/>;
+      case 'packages':     return <PackagesPage lang={lang} setPage={setPage} initialSelectedPkg={selectedPackage}/>;
+      case 'guides':       return <GuidesPage lang={lang} selectedGuide={selectedGuide}/>;
+      case 'destinations': return <DestinationsPage lang={lang} setPage={setPage} selectedProvince={selectedProvince} setSelectedProvince={setSelectedProvince}/>;
+      case 'about':        return <AboutPage lang={lang} setPage={setPage}/>;
+      default:             return <HomePage setPage={setPage} lang={lang} tweaks={tweaks} setSelectedProvince={setSelectedProvince} setSelectedGuide={setSelectedGuide} setSelectedPackage={setSelectedPackage}/>;
     }
   };
 

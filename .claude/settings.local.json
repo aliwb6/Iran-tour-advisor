@@ -4,7 +4,18 @@
       "Bash(wc -l *.jsx *.css)",
       "Bash(unzip -l \"/home/alireza/Desktop/KHAMENEI Fonts.zip\")",
       "Bash(python3 -m http.server 8080)",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "Bash(python3:*)",
+      "Bash(xdg-open:*)",
+      "Bash(grep -n \"price\\\\|Price\\\\|cost\\\\|Cost\\\\|budget\\\\|Budget\\\\|هزینه\\\\|قیمت\\\\|\\\\$\\\\|USD\\\\|IRR\\\\|تومان\")",
+      "Bash(grep -v \"^$\")",
+      "Bash(grep -r \"price\\\\|Price\\\\|قیمت\\\\|هزینه\\\\|\\\\$[0-9]\\\\|USD\\\\|IRR\\\\|تومان\\\\|budget\\\\|Budget\" \"/home/alireza/Desktop/Iran-tour-advisor /\" --include=\"*.jsx\" --include=\"*.html\")",
+      "Bash(grep -rni \"price\\\\|cost\\\\|هزینه\\\\|قیمت\\\\|budget\\\\|\\\\$\\\\|USD\\\\|IRR\\\\|تومان\\\\|rial\" \"/home/alireza/Desktop/Iran-tour-advisor /\" --include=\"*.jsx\" --include=\"*.css\")",
+      "Bash(grep -rni \"price\\\\|cost\\\\|هزینه\\\\|قیمت\\\\|budget\\\\|\\\\\\\\\\\\$[0-9]\\\\|USD\\\\|IRR\\\\|تومان\" \"/home/alireza/Desktop/Iran-tour-advisor /\" --include=\"*.jsx\")",
+      "Bash(node --input-type=module)",
+      "Bash(node -e ':*)",
+      "Read(//home/alireza/Desktop/**)",
+      "Read(//home/alireza/**)"
     ]
   }
 }
