@@ -280,6 +280,8 @@ const GuideCard = ({ guide, lang, onClick }) => {
 // ─── Guide Profile ────────────────────────────────────────────
 const GuideProfile = ({ guide, lang, onBack }) => {
   const [contactOpen, setContactOpen] = React.useState(false);
+  const [isMobileGuide, setIsMobileGuide] = React.useState(window.innerWidth < 768);
+  React.useEffect(() => { const h = () => setIsMobileGuide(window.innerWidth < 768); window.addEventListener('resize', h); return () => window.removeEventListener('resize', h); }, []);
   const name = lang === 'fa' ? guide.nameFa : guide.nameEn;
   const city = lang === 'fa' ? guide.city : guide.cityEn;
   const specialty = lang === 'fa' ? guide.specialtyFa : guide.specialtyEn;
@@ -292,13 +294,13 @@ const GuideProfile = ({ guide, lang, onBack }) => {
     <div style={{ background: '#F8F6F2', minHeight: '100vh', paddingTop: 68 }}>
       {contactOpen && <ContactModal lang={lang} onClose={() => setContactOpen(false)} title={`${lang === 'fa' ? 'تماس با' : 'Contact'} ${name}`} />}
       {/* Hero */}
-      <div style={{ background: `linear-gradient(135deg,${from} 0%,#0A0A0A 100%)`, padding: '56px 24px 64px', position: 'relative', overflow: 'hidden' }}>
-        <StarWatermark size={500} style={{ top: '50%', left: '50%', transform: 'translate(-50%,-50%)', color: '#fff' }} />
+      <div style={{ background: `linear-gradient(135deg,${from} 0%,#0A0A0A 100%)`, padding: isMobileGuide ? '40px 16px 48px' : '56px 24px 64px', position: 'relative', overflow: 'hidden' }}>
+        <StarWatermark size={isMobileGuide ? 250 : 500} style={{ top: '50%', left: '50%', transform: 'translate(-50%,-50%)', color: '#fff' }} />
         <div style={{ maxWidth: 900, margin: '0 auto', position: 'relative', zIndex: 1 }}>
           <button onClick={onBack} style={{ background: 'rgba(255,255,255,0.08)', backdropFilter: 'blur(8px)', border: '1px solid rgba(255,255,255,0.15)', color: '#fff', borderRadius: 999, padding: '7px 18px', fontSize: 12, fontWeight: 600, cursor: 'pointer', marginBottom: 28, fontFamily: 'var(--font-en)' }}>
             ← {lang === 'fa' ? 'بازگشت' : 'Back'}
           </button>
-          <div style={{ display: 'flex', gap: 28, alignItems: 'flex-start', flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', gap: 28, alignItems: 'flex-start', flexWrap: 'wrap', flexDirection: isMobileGuide ? 'column' : 'row' }}>
             <div style={{ position: 'relative' }}>
               <div style={{ width: 120, height: 120, borderRadius: '50%', background: `linear-gradient(135deg,${from},${to})`, display: 'flex', alignItems: 'center', justifyContent: 'center', border: '4px solid rgba(255,255,255,0.2)', boxShadow: '0 12px 32px rgba(0,0,0,0.3)' }}>
                 <svg width="64" height="64" viewBox="0 0 40 40" fill="none">
@@ -337,8 +339,8 @@ const GuideProfile = ({ guide, lang, onBack }) => {
         </div>
       </div>
 
-      <div style={{ maxWidth: 900, margin: '0 auto', padding: '40px 24px' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 300px', gap: 24 }}>
+      <div style={{ maxWidth: 900, margin: '0 auto', padding: isMobileGuide ? '24px 16px' : '40px 24px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: isMobileGuide ? '1fr' : '1fr 300px', gap: 24 }}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
             {[
             { title: lang === 'fa' ? 'درباره من' : 'About Me', content:

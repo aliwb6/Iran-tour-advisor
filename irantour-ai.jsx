@@ -1,7 +1,14 @@
 // IranTour Advisor — AI Planner v2 (no pricing)
 
+const useIsMobile = () => {
+  const [m, setM] = React.useState(window.innerWidth < 768);
+  React.useEffect(() => { const h = () => setM(window.innerWidth < 768); window.addEventListener('resize', h); return () => window.removeEventListener('resize', h); }, []);
+  return m;
+};
+
 const AIPlanner = ({ lang }) => {
   const t = (fa, en) => lang === 'fa' ? fa : en;
+  const isMobile = useIsMobile();
 
   const [messages, setMessages] = React.useState([
     { id:1, isUser:false, text: t(
@@ -97,47 +104,49 @@ const AIPlanner = ({ lang }) => {
       <div style={{maxWidth:1100, margin:'0 auto', padding:'0 24px', flex:1, display:'flex', gap:0, height:'calc(100vh - 68px)', position:'relative', zIndex:1}}>
 
         {/* ── Sidebar ─────────────────────────────────────── */}
-        <div style={{width:250, borderRight:'1px solid rgba(212,136,10,0.12)', padding:'24px 20px 24px 0', display:'flex', flexDirection:'column', gap:20, flexShrink:0}}>
-          <div>
-            <div style={{fontSize:10, color:'rgba(245,240,232,0.3)', fontWeight:700, letterSpacing:'0.12em', textTransform:'uppercase', marginBottom:12, fontFamily:'var(--font-en)'}}>TRIP FILTERS</div>
-            {[
-              { label: t('مدت سفر','Duration'), opts:[t('۵-۷ روز','5-7 days'),t('۸-۱۰ روز','8-10 days'),t('۱۴+ روز','14+ days')] },
-              { label: t('سبک سفر','Travel Style'), opts:[t('فرهنگی','Cultural'),t('ماجراجویانه','Adventurous'),t('زیارتی','Pilgrimage')] },
-              { label: t('اندازه گروه','Group Size'), opts:[t('انفرادی','Solo'),t('زوج','Couple'),t('گروه','Group')] },
-            ].map(f => (
-              <div key={f.label} style={{marginBottom:16}}>
-                <div style={{fontSize:11, color:'rgba(245,240,232,0.45)', marginBottom:8, fontFamily:'var(--font-body)'}}>{f.label}</div>
-                <div style={{display:'flex', flexDirection:'column', gap:4}}>
-                  {f.opts.map((o, i) => (
-                    <button key={o} style={{
-                      background: i===0 ? 'rgba(139,26,26,0.2)' : 'rgba(255,255,255,0.03)',
-                      border: i===0 ? '1px solid rgba(139,26,26,0.4)' : '1px solid rgba(255,255,255,0.06)',
-                      padding:'7px 12px', color: i===0 ? '#E57373' : 'rgba(255,255,255,0.4)',
-                      fontSize:12, cursor:'pointer', textAlign: lang==='fa' ? 'right' : 'left',
-                      fontFamily:'var(--font-body)', transition:'all 0.15s',
-                    }}>
-                      {o}
-                    </button>
-                  ))}
+        {!isMobile && (
+          <div style={{width:250, borderRight:'1px solid rgba(212,136,10,0.12)', padding:'24px 20px 24px 0', display:'flex', flexDirection:'column', gap:20, flexShrink:0}}>
+            <div>
+              <div style={{fontSize:10, color:'rgba(245,240,232,0.3)', fontWeight:700, letterSpacing:'0.12em', textTransform:'uppercase', marginBottom:12, fontFamily:'var(--font-en)'}}>TRIP FILTERS</div>
+              {[
+                { label: t('مدت سفر','Duration'), opts:[t('۵-۷ روز','5-7 days'),t('۸-۱۰ روز','8-10 days'),t('۱۴+ روز','14+ days')] },
+                { label: t('سبک سفر','Travel Style'), opts:[t('فرهنگی','Cultural'),t('ماجراجویانه','Adventurous'),t('زیارتی','Pilgrimage')] },
+                { label: t('اندازه گروه','Group Size'), opts:[t('انفرادی','Solo'),t('زوج','Couple'),t('گروه','Group')] },
+              ].map(f => (
+                <div key={f.label} style={{marginBottom:16}}>
+                  <div style={{fontSize:11, color:'rgba(245,240,232,0.45)', marginBottom:8, fontFamily:'var(--font-body)'}}>{f.label}</div>
+                  <div style={{display:'flex', flexDirection:'column', gap:4}}>
+                    {f.opts.map((o, i) => (
+                      <button key={o} style={{
+                        background: i===0 ? 'rgba(139,26,26,0.2)' : 'rgba(255,255,255,0.03)',
+                        border: i===0 ? '1px solid rgba(139,26,26,0.4)' : '1px solid rgba(255,255,255,0.06)',
+                        padding:'7px 12px', color: i===0 ? '#E57373' : 'rgba(255,255,255,0.4)',
+                        fontSize:12, cursor:'pointer', textAlign: lang==='fa' ? 'right' : 'left',
+                        fontFamily:'var(--font-body)', transition:'all 0.15s',
+                      }}>
+                        {o}
+                      </button>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
 
-          <div style={{marginTop:'auto', background:'rgba(139,26,26,0.1)', border:'1px solid rgba(139,26,26,0.2)', padding:16}}>
-            <CarpetBorder color="#8B1A1A" accent="#D4880A" height={8}/>
-            <div style={{paddingTop:10}}>
-              <div style={{color:'#E57373', fontSize:12, fontWeight:700, marginBottom:6, fontFamily:'var(--font-body)'}}>{t('نیاز به کمک دارید؟','Need Help?')}</div>
-              <div style={{color:'rgba(255,255,255,0.4)', fontSize:11, lineHeight:1.6, fontFamily:'var(--font-body)'}}>{t('با یک کارشناس سفر ایران صحبت کنید.','Chat with an Iran travel expert.')}</div>
-              <button style={{marginTop:10, background:'#8B1A1A', color:'#F5F0E8', border:'none', padding:'8px 0', fontSize:12, fontWeight:700, cursor:'pointer', width:'100%', fontFamily:'var(--font-body)'}}>
-                {t('تماس با ما','Contact Us')}
-              </button>
+            <div style={{marginTop:'auto', background:'rgba(139,26,26,0.1)', border:'1px solid rgba(139,26,26,0.2)', padding:16}}>
+              <CarpetBorder color="#8B1A1A" accent="#D4880A" height={8}/>
+              <div style={{paddingTop:10}}>
+                <div style={{color:'#E57373', fontSize:12, fontWeight:700, marginBottom:6, fontFamily:'var(--font-body)'}}>{t('نیاز به کمک دارید؟','Need Help?')}</div>
+                <div style={{color:'rgba(255,255,255,0.4)', fontSize:11, lineHeight:1.6, fontFamily:'var(--font-body)'}}>{t('با یک کارشناس سفر ایران صحبت کنید.','Chat with an Iran travel expert.')}</div>
+                <button style={{marginTop:10, background:'#8B1A1A', color:'#F5F0E8', border:'none', padding:'8px 0', fontSize:12, fontWeight:700, cursor:'pointer', width:'100%', fontFamily:'var(--font-body)'}}>
+                  {t('تماس با ما','Contact Us')}
+                </button>
+              </div>
             </div>
           </div>
-        </div>
+        )}
 
         {/* ── Chat ────────────────────────────────────────── */}
-        <div style={{flex:1, display:'flex', flexDirection:'column', padding:'24px 0 24px 24px', minHeight:0}}>
+        <div style={{flex:1, display:'flex', flexDirection:'column', padding: isMobile ? '24px 0' : '24px 0 24px 24px', minHeight:0}}>
           {/* Header */}
           <div style={{display:'flex', alignItems:'center', gap:12, marginBottom:18, paddingBottom:14, borderBottom:'1px solid rgba(212,136,10,0.1)'}}>
             <CarpetMedallion size={44} color="#8B1A1A" accent="#D4880A"/>

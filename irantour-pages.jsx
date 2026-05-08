@@ -7,6 +7,8 @@ const PackagesPage = ({ lang, setPage, initialSelectedPkg }) => {
   const t = (fa, en) => lang === 'fa' ? fa : en;
   const [activePurpose, setActivePurpose] = React.useState('all');
   const [selectedPkg, setSelectedPkg] = React.useState(initialSelectedPkg || null);
+  const [isMobilePkgPg, setIsMobilePkgPg] = React.useState(window.innerWidth < 768);
+  React.useEffect(() => { const h = () => setIsMobilePkgPg(window.innerWidth < 768); window.addEventListener('resize', h); return () => window.removeEventListener('resize', h); }, []);
 
   const filtered = activePurpose === 'all' ?
   PACKAGES :
@@ -19,8 +21,8 @@ const PackagesPage = ({ lang, setPage, initialSelectedPkg }) => {
   return (
     <div style={{ background: '#F8F6F2', minHeight: '100vh', paddingTop: 68 }}>
       {/* Hero */}
-      <div style={{ background: 'linear-gradient(145deg,#0A0A0A 0%,#1A0A02 40%,#2C1208 100%)', padding: '72px 32px 56px', position: 'relative', overflow: 'hidden', fontFamily: "Khamenei" }}>
-        <StarWatermark size={440} style={{ top: '50%', right: '4%', transform: 'translateY(-50%)', color: '#C9A96E' }} />
+      <div style={{ background: 'linear-gradient(145deg,#0A0A0A 0%,#1A0A02 40%,#2C1208 100%)', padding: isMobilePkgPg ? '48px 16px 40px' : '72px 32px 56px', position: 'relative', overflow: 'hidden', fontFamily: "Khamenei" }}>
+        <StarWatermark size={isMobilePkgPg ? 220 : 440} style={{ top: '50%', right: '4%', transform: 'translateY(-50%)', color: '#C9A96E' }} />
         <div style={{ maxWidth: 1100, margin: '0 auto', position: 'relative', zIndex: 1 }}>
           <div style={{ color: '#C9A96E', fontSize: 11, fontWeight: 700, letterSpacing: '0.15em', textTransform: 'uppercase', fontFamily: 'var(--font-en)', marginBottom: 14, display: 'flex', alignItems: 'center', gap: 8 }}>
             <GeoLine width={20} color="#C9A96E" /> CURATED JOURNEYS <GeoLine width={20} color="#C9A96E" />
@@ -36,7 +38,7 @@ const PackagesPage = ({ lang, setPage, initialSelectedPkg }) => {
 
       {/* Filter bar */}
       <div style={{ background: 'rgba(248,246,242,0.92)', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)', borderBottom: '1px solid #EFEFEF', position: 'sticky', top: 68, zIndex: 10 }}>
-        <div style={{ maxWidth: 1100, margin: '0 auto', padding: '0 32px' }}>
+        <div style={{ maxWidth: 1100, margin: '0 auto', padding: isMobilePkgPg ? '0 16px' : '0 32px' }}>
           <div style={{ display: 'flex', gap: 8, overflowX: 'auto', padding: '14px 0', scrollbarWidth: 'none', alignItems: 'center' }}>
             <span style={{ fontSize: 10, color: '#9CA3AF', flexShrink: 0, fontFamily: 'var(--font-en)', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase' }}>WHY VISITING:</span>
             <button onClick={() => setActivePurpose('all')} style={{
@@ -66,7 +68,7 @@ const PackagesPage = ({ lang, setPage, initialSelectedPkg }) => {
       </div>
 
       {/* Grid */}
-      <div style={{ maxWidth: 1100, margin: '0 auto', padding: '48px 32px', fontFamily: "Khamenei" }}>
+      <div style={{ maxWidth: 1100, margin: '0 auto', padding: isMobilePkgPg ? '32px 16px' : '48px 32px', fontFamily: "Khamenei" }}>
         {filtered.length === 0 ?
         <div style={{ textAlign: 'center', padding: '80px 0' }}>
             <div style={{ fontSize: 48, marginBottom: 16 }}>🔍</div>
@@ -81,7 +83,7 @@ const PackagesPage = ({ lang, setPage, initialSelectedPkg }) => {
         }
 
         {/* AI CTA */}
-        <div style={{ marginTop: 56, background: '#0A0A0A', borderRadius: 20, padding: '44px 40px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 20, position: 'relative', overflow: 'hidden', fontFamily: "Khamenei" }}>
+        <div style={{ marginTop: 56, background: '#0A0A0A', borderRadius: 20, padding: isMobilePkgPg ? '32px 20px' : '44px 40px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 20, position: 'relative', overflow: 'hidden', fontFamily: "Khamenei" }}>
           <StarWatermark size={300} style={{ top: '50%', right: '20px', transform: 'translateY(-50%)', color: '#C9A96E' }} />
           <div style={{ position: 'relative', zIndex: 1 }}>
             <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: 24, fontWeight: 800, color: '#F8F6F2', margin: '0 0 8px' }}>
@@ -111,6 +113,8 @@ const PackagesPage = ({ lang, setPage, initialSelectedPkg }) => {
 const PackageDetail = ({ pkg, lang, onBack, setPage }) => {
   const t = (fa, en) => lang === 'fa' ? fa : en;
   const [contactOpen, setContactOpen] = React.useState(false);
+  const [isMobilePkg, setIsMobilePkg] = React.useState(window.innerWidth < 768);
+  React.useEffect(() => { const h = () => setIsMobilePkg(window.innerWidth < 768); window.addEventListener('resize', h); return () => window.removeEventListener('resize', h); }, []);
   const name = lang === 'fa' ? pkg.nameFa : pkg.nameEn;
   const tag = lang === 'fa' ? pkg.tagFa : pkg.tagEn;
   const desc = lang === 'fa' ? pkg.descFa : pkg.descEn;
@@ -139,8 +143,8 @@ const PackageDetail = ({ pkg, lang, onBack, setPage }) => {
         </div>
       </div>
 
-      <div style={{ maxWidth: 1000, margin: '0 auto', padding: '48px 32px' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 280px', gap: 28 }}>
+      <div style={{ maxWidth: 1000, margin: '0 auto', padding: isMobilePkg ? '32px 16px' : '48px 32px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: isMobilePkg ? '1fr' : '1fr 280px', gap: 28 }}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
             {/* About */}
             <div style={{ background: '#fff', borderRadius: 16, padding: 28, boxShadow: '0 2px 16px rgba(0,0,0,0.06)', border: '1px solid #EFEFEF' }}>
@@ -167,7 +171,7 @@ const PackageDetail = ({ pkg, lang, onBack, setPage }) => {
             {/* Highlights */}
             <div style={{ background: '#fff', borderRadius: 16, padding: 28, boxShadow: '0 2px 16px rgba(0,0,0,0.06)', border: '1px solid #EFEFEF' }}>
               <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: 20, fontWeight: 700, color: '#1A1A1A', margin: '0 0 16px' }}>{t('چه خواهید دید', 'What You\'ll Experience')}</h2>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: isMobilePkg ? '1fr' : '1fr 1fr', gap: 10 }}>
                 {highs.map((h, i) =>
                 <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '12px 16px', background: '#F8F6F2', borderRadius: 10, border: '1px solid #EFEFEF' }}>
                     <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#C9A96E', flexShrink: 0 }} />
@@ -240,6 +244,8 @@ const GuidesPage = ({ lang, selectedGuide: initialSelectedGuide }) => {
   const t = (fa, en) => lang === 'fa' ? fa : en;
   const [selectedGuide, setSelectedGuide] = React.useState(initialSelectedGuide || null);
   const [registerOpen, setRegisterOpen] = React.useState(false);
+  const [isMobileGuidePg, setIsMobileGuidePg] = React.useState(window.innerWidth < 768);
+  React.useEffect(() => { const h = () => setIsMobileGuidePg(window.innerWidth < 768); window.addEventListener('resize', h); return () => window.removeEventListener('resize', h); }, []);
 
   if (selectedGuide) {
     return <GuideProfile guide={selectedGuide} lang={lang} onBack={() => setSelectedGuide(null)} />;
@@ -249,8 +255,8 @@ const GuidesPage = ({ lang, selectedGuide: initialSelectedGuide }) => {
     <div style={{ background: '#F8F6F2', minHeight: '100vh', paddingTop: 68 }}>
       {registerOpen && <ContactModal lang={lang} onClose={() => setRegisterOpen(false)} title={t('ثبت‌نام به عنوان راهنما', 'Register as a Guide')} />}
       {/* Hero */}
-      <div style={{ background: 'linear-gradient(145deg,#0A0A0A 0%,#0D1520 50%,#0A1A25 100%)', padding: '72px 32px 56px', position: 'relative', overflow: 'hidden' }}>
-        <StarWatermark size={440} style={{ top: '50%', right: '4%', transform: 'translateY(-50%)', color: '#C9A96E' }} />
+      <div style={{ background: 'linear-gradient(145deg,#0A0A0A 0%,#0D1520 50%,#0A1A25 100%)', padding: isMobileGuidePg ? '48px 16px 40px' : '72px 32px 56px', position: 'relative', overflow: 'hidden' }}>
+        <StarWatermark size={isMobileGuidePg ? 220 : 440} style={{ top: '50%', right: '4%', transform: 'translateY(-50%)', color: '#C9A96E' }} />
         <div style={{ maxWidth: 1100, margin: '0 auto', position: 'relative', zIndex: 1 }}>
           <div style={{ color: '#C9A96E', fontSize: 11, fontWeight: 700, letterSpacing: '0.15em', textTransform: 'uppercase', fontFamily: 'var(--font-en)', marginBottom: 14, display: 'flex', alignItems: 'center', gap: 8 }}>
             <GeoLine width={20} color="#C9A96E" /> LOCAL EXPERTS <GeoLine width={20} color="#C9A96E" />
@@ -265,7 +271,7 @@ const GuidesPage = ({ lang, selectedGuide: initialSelectedGuide }) => {
       </div>
 
       {/* Single-city rule callout */}
-      <div style={{ background: 'rgba(201,169,110,0.05)', borderBottom: '1px solid rgba(201,169,110,0.1)', padding: '14px 32px' }}>
+      <div style={{ background: 'rgba(201,169,110,0.05)', borderBottom: '1px solid rgba(201,169,110,0.1)', padding: isMobileGuidePg ? '14px 16px' : '14px 32px' }}>
         <div style={{ maxWidth: 1100, margin: '0 auto', display: 'flex', alignItems: 'center', gap: 10 }}>
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C9A96E" strokeWidth="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" /></svg>
           <span style={{ fontSize: 13, color: '#6B6B6B', fontWeight: 600, fontFamily: 'var(--font-body)' }}>
@@ -274,13 +280,13 @@ const GuidesPage = ({ lang, selectedGuide: initialSelectedGuide }) => {
         </div>
       </div>
 
-      <div style={{ maxWidth: 1000, margin: '0 auto', padding: '56px 32px' }}>
+      <div style={{ maxWidth: 1000, margin: '0 auto', padding: isMobileGuidePg ? '32px 16px' : '56px 32px' }}>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(280px,1fr))', gap: 24 }}>
           {GUIDES.map((g) => <GuideCard key={g.id} guide={g} lang={lang} onClick={() => setSelectedGuide(g)} />)}
         </div>
 
         {/* Become a guide CTA */}
-        <div style={{ marginTop: 56, background: '#0A0A0A', borderRadius: 20, padding: '44px 40px', display: 'flex', alignItems: 'center', gap: 24, flexWrap: 'wrap', position: 'relative', overflow: 'hidden' }}>
+        <div style={{ marginTop: 56, background: '#0A0A0A', borderRadius: 20, padding: isMobileGuidePg ? '32px 20px' : '44px 40px', display: 'flex', alignItems: 'center', gap: 24, flexWrap: 'wrap', position: 'relative', overflow: 'hidden' }}>
           <StarWatermark size={280} style={{ top: '50%', right: '20px', transform: 'translateY(-50%)', color: '#C9A96E' }} />
           <div style={{ flex: 1, position: 'relative', zIndex: 1 }}>
             <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: 22, fontWeight: 800, color: '#F8F6F2', margin: '0 0 8px' }}>
@@ -306,6 +312,8 @@ const GuidesPage = ({ lang, selectedGuide: initialSelectedGuide }) => {
 // ─────────────────────────────────────────────────────────────
 const DestinationDetail = ({ prov, lang, onBack, setPage }) => {
   const t = (fa, en) => lang === 'fa' ? fa : en;
+  const [isMobileDest, setIsMobileDest] = React.useState(window.innerWidth < 768);
+  React.useEffect(() => { const h = () => setIsMobileDest(window.innerWidth < 768); window.addEventListener('resize', h); return () => window.removeEventListener('resize', h); }, []);
   const name = lang === 'fa' ? prov.nameFa : prov.nameEn;
   const highlights = lang === 'fa' ? prov.highlights : (prov.highlightsEn || prov.highlights);
 
@@ -359,8 +367,8 @@ const DestinationDetail = ({ prov, lang, onBack, setPage }) => {
   return (
     <div style={{ background: '#F8F6F2', minHeight: '100vh', paddingTop: 68 }}>
       {/* Hero */}
-      <div style={{ background: prov.gradient, padding: '64px 32px 56px', position: 'relative', overflow: 'hidden', minHeight: 280 }}>
-        <StarWatermark size={440} style={{ top: '50%', right: '4%', transform: 'translateY(-50%)', color: '#fff' }} />
+      <div style={{ background: prov.gradient, padding: isMobileDest ? '40px 16px 36px' : '64px 32px 56px', position: 'relative', overflow: 'hidden', minHeight: isMobileDest ? 200 : 280 }}>
+        <StarWatermark size={isMobileDest ? 220 : 440} style={{ top: '50%', right: '4%', transform: 'translateY(-50%)', color: '#fff' }} />
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(10,10,10,0.7) 0%, rgba(0,0,0,0.2) 100%)' }} />
         <div style={{ maxWidth: 1000, margin: '0 auto', position: 'relative', zIndex: 1 }}>
           <button onClick={onBack} style={{ background: 'rgba(255,255,255,0.12)', backdropFilter: 'blur(8px)', border: '1px solid rgba(255,255,255,0.2)', color: '#fff', borderRadius: 999, padding: '7px 18px', fontSize: 12, fontWeight: 600, cursor: 'pointer', marginBottom: 24, fontFamily: 'var(--font-en)' }}>
@@ -375,8 +383,8 @@ const DestinationDetail = ({ prov, lang, onBack, setPage }) => {
         </div>
       </div>
 
-      <div style={{ maxWidth: 1000, margin: '0 auto', padding: '48px 32px' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 300px', gap: 28 }}>
+      <div style={{ maxWidth: 1000, margin: '0 auto', padding: isMobileDest ? '32px 16px' : '48px 32px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: isMobileDest ? '1fr' : '1fr 300px', gap: 28 }}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
 
             {/* Top Attractions */}
@@ -463,6 +471,8 @@ const DestinationDetail = ({ prov, lang, onBack, setPage }) => {
 const DestinationsPage = ({ lang, setPage, selectedProvince, setSelectedProvince }) => {
   const t = (fa, en) => lang === 'fa' ? fa : en;
   const [search, setSearch] = React.useState('');
+  const [isMobileDestPg, setIsMobileDestPg] = React.useState(window.innerWidth < 768);
+  React.useEffect(() => { const h = () => setIsMobileDestPg(window.innerWidth < 768); window.addEventListener('resize', h); return () => window.removeEventListener('resize', h); }, []);
 
   // Show detail view if a province is selected
   if (selectedProvince) {
@@ -476,8 +486,8 @@ const DestinationsPage = ({ lang, setPage, selectedProvince, setSelectedProvince
   return (
     <div style={{ background: '#F8F6F2', minHeight: '100vh', paddingTop: 68 }}>
       {/* Hero */}
-      <div style={{ background: 'linear-gradient(145deg,#0A0A0A 0%,#0D1B2A 50%,#0A2030 100%)', padding: '72px 32px 56px', position: 'relative', overflow: 'hidden' }}>
-        <StarWatermark size={440} style={{ top: '50%', right: '4%', transform: 'translateY(-50%)', color: '#C9A96E' }} />
+      <div style={{ background: 'linear-gradient(145deg,#0A0A0A 0%,#0D1B2A 50%,#0A2030 100%)', padding: isMobileDestPg ? '48px 16px 40px' : '72px 32px 56px', position: 'relative', overflow: 'hidden' }}>
+        <StarWatermark size={isMobileDestPg ? 220 : 440} style={{ top: '50%', right: '4%', transform: 'translateY(-50%)', color: '#C9A96E' }} />
         <div style={{ maxWidth: 1200, margin: '0 auto', position: 'relative', zIndex: 1 }}>
           <div style={{ color: '#C9A96E', fontSize: 11, fontWeight: 700, letterSpacing: '0.15em', textTransform: 'uppercase', fontFamily: 'var(--font-en)', marginBottom: 14, display: 'flex', alignItems: 'center', gap: 8 }}>
             <GeoLine width={20} color="#C9A96E" /> 31 PROVINCES <GeoLine width={20} color="#C9A96E" />
@@ -501,7 +511,7 @@ const DestinationsPage = ({ lang, setPage, selectedProvince, setSelectedProvince
         </div>
       </div>
 
-      <div style={{ maxWidth: 1200, margin: '0 auto', padding: '48px 32px' }}>
+      <div style={{ maxWidth: 1200, margin: '0 auto', padding: isMobileDestPg ? '32px 16px' : '48px 32px' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24 }}>
           <span style={{ color: '#6B6B6B', fontSize: 14, fontFamily: 'var(--font-body)' }}>
             {filtered.length} {t('استان', 'provinces')} {search ? t('یافت شد', 'found') : ''}
@@ -529,6 +539,8 @@ const DestinationsPage = ({ lang, setPage, selectedProvince, setSelectedProvince
 const AboutPage = ({ lang, setPage }) => {
   const t = (fa, en) => lang === 'fa' ? fa : en;
   const [contactOpen, setContactOpen] = React.useState(false);
+  const [isMobileAbout, setIsMobileAbout] = React.useState(window.innerWidth < 768);
+  React.useEffect(() => { const h = () => setIsMobileAbout(window.innerWidth < 768); window.addEventListener('resize', h); return () => window.removeEventListener('resize', h); }, []);
 
   const teamMembers = [
     { nameFa: 'دکتر مریم رضایی', nameEn: 'Dr. Maryam Rezaei', roleFa: 'بنیان‌گذار و مدیر فرهنگی', roleEn: 'Founder & Cultural Director', color: '#8B1A1A' },
@@ -555,8 +567,8 @@ const AboutPage = ({ lang, setPage }) => {
       {contactOpen && <ContactModal lang={lang} onClose={() => setContactOpen(false)} title={t('تماس با ما', 'Contact Us')} />}
 
       {/* Hero */}
-      <div style={{ background: 'linear-gradient(145deg,#0A0A0A 0%,#1A0A02 40%,#2C1208 100%)', padding: '80px 32px 64px', position: 'relative', overflow: 'hidden' }}>
-        <StarWatermark size={500} style={{ top: '50%', right: '4%', transform: 'translateY(-50%)', color: '#C9A96E' }} />
+      <div style={{ background: 'linear-gradient(145deg,#0A0A0A 0%,#1A0A02 40%,#2C1208 100%)', padding: isMobileAbout ? '56px 16px 48px' : '80px 32px 64px', position: 'relative', overflow: 'hidden' }}>
+        <StarWatermark size={isMobileAbout ? 250 : 500} style={{ top: '50%', right: '4%', transform: 'translateY(-50%)', color: '#C9A96E' }} />
         <div style={{ maxWidth: 1000, margin: '0 auto', position: 'relative', zIndex: 1 }}>
           <div style={{ color: '#C9A96E', fontSize: 11, fontWeight: 700, letterSpacing: '0.15em', textTransform: 'uppercase', fontFamily: 'var(--font-en)', marginBottom: 14, display: 'flex', alignItems: 'center', gap: 8 }}>
             <GeoLine width={20} color="#C9A96E" /> {t('ابتکار فرهنگی ملی', 'NATIONAL CULTURAL INITIATIVE')} <GeoLine width={20} color="#C9A96E" />
@@ -587,7 +599,7 @@ const AboutPage = ({ lang, setPage }) => {
 
       {/* Stats */}
       <div style={{ background: '#fff', borderBottom: '1px solid #EFEFEF' }}>
-        <div style={{ maxWidth: 1000, margin: '0 auto', padding: '40px 32px', display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 24 }}>
+        <div style={{ maxWidth: 1000, margin: '0 auto', padding: '40px 32px', display: 'grid', gridTemplateColumns: isMobileAbout ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)', gap: 24 }}>
           {stats.map((s) => (
             <div key={s.numEn} style={{ textAlign: 'center' }}>
               <div style={{ fontFamily: 'var(--font-heading)', fontSize: 36, fontWeight: 800, color: '#C9A96E', lineHeight: 1 }}>{lang === 'fa' ? s.numFa : s.numEn}</div>
@@ -597,10 +609,10 @@ const AboutPage = ({ lang, setPage }) => {
         </div>
       </div>
 
-      <div style={{ maxWidth: 1000, margin: '0 auto', padding: '64px 32px' }}>
+      <div style={{ maxWidth: 1000, margin: '0 auto', padding: isMobileAbout ? '40px 16px' : '64px 32px' }}>
 
         {/* Mission */}
-        <div style={{ background: '#fff', borderRadius: 20, padding: '40px', boxShadow: '0 2px 16px rgba(0,0,0,0.06)', border: '1px solid #EFEFEF', marginBottom: 28 }}>
+        <div style={{ background: '#fff', borderRadius: 20, padding: isMobileAbout ? '24px' : '40px', boxShadow: '0 2px 16px rgba(0,0,0,0.06)', border: '1px solid #EFEFEF', marginBottom: 28 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 18 }}>
             <div style={{ width: 4, height: 28, background: 'linear-gradient(to bottom,#8B1A1A,#C9A96E)', borderRadius: 2 }} />
             <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: 22, fontWeight: 800, color: '#1A1A1A', margin: 0 }}>{t('مأموریت ما', 'Our Mission')}</h2>
@@ -622,7 +634,7 @@ const AboutPage = ({ lang, setPage }) => {
         {/* Values */}
         <div style={{ marginBottom: 28 }}>
           <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: 22, fontWeight: 800, color: '#1A1A1A', margin: '0 0 20px' }}>{t('ارزش‌های ما', 'Our Values')}</h2>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 16 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: isMobileAbout ? '1fr' : 'repeat(2, 1fr)', gap: 16 }}>
             {values.map((v) => (
               <div key={v.icon} style={{ background: '#fff', borderRadius: 16, padding: '24px', boxShadow: '0 2px 16px rgba(0,0,0,0.06)', border: '1px solid #EFEFEF', display: 'flex', gap: 16, alignItems: 'flex-start' }}>
                 <div style={{ width: 48, height: 48, borderRadius: 12, background: '#F8F6F2', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 24, flexShrink: 0, border: '1px solid #EFEFEF' }}>{v.icon}</div>
@@ -638,7 +650,7 @@ const AboutPage = ({ lang, setPage }) => {
         {/* Team */}
         <div style={{ marginBottom: 28 }}>
           <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: 22, fontWeight: 800, color: '#1A1A1A', margin: '0 0 20px' }}>{t('تیم ما', 'Our Team')}</h2>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: isMobileAbout ? '1fr' : 'repeat(3, 1fr)', gap: 16 }}>
             {teamMembers.map((m) => (
               <div key={m.nameEn} style={{ background: '#fff', borderRadius: 16, padding: '28px 24px', boxShadow: '0 2px 16px rgba(0,0,0,0.06)', border: '1px solid #EFEFEF', textAlign: 'center' }}>
                 <div style={{ width: 72, height: 72, borderRadius: '50%', background: `linear-gradient(135deg,${m.color},#C9A96E)`, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px', border: '3px solid #EFEFEF' }}>
@@ -652,8 +664,8 @@ const AboutPage = ({ lang, setPage }) => {
         </div>
 
         {/* Contact CTA */}
-        <div style={{ background: '#0A0A0A', borderRadius: 20, padding: '44px 40px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 20, position: 'relative', overflow: 'hidden' }}>
-          <StarWatermark size={300} style={{ top: '50%', right: '20px', transform: 'translateY(-50%)', color: '#C9A96E' }} />
+        <div style={{ background: '#0A0A0A', borderRadius: 20, padding: isMobileAbout ? '32px 20px' : '44px 40px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 20, position: 'relative', overflow: 'hidden' }}>
+          <StarWatermark size={isMobileAbout ? 150 : 300} style={{ top: '50%', right: '20px', transform: 'translateY(-50%)', color: '#C9A96E' }} />
           <div style={{ position: 'relative', zIndex: 1 }}>
             <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: 22, fontWeight: 800, color: '#F8F6F2', margin: '0 0 8px' }}>{t('سؤالی دارید؟', 'Have a Question?')}</h3>
             <p style={{ color: 'rgba(248,246,242,0.45)', fontSize: 14, margin: 0, fontFamily: 'var(--font-body)' }}>{t('تیم ما آماده پاسخگویی است', 'Our team is ready to help')}</p>
